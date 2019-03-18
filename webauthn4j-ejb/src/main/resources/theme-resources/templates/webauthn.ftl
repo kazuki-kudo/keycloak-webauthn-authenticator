@@ -26,10 +26,12 @@
     <script type="text/javascript">
 
        function doAuthenticate() {
-
         var challenge = "${challenge}";
         var rpId = "${rpId}";
         var origin = "${origin}";
+        var rawId = "${rawId}";
+// allowCredentials: [{ type: public-key, id: base64url.decode(rawId) }],
+
         var publicKey = {
             challenge: base64url.decode(challenge),
             rpId: rpId,
@@ -52,7 +54,7 @@
                 if(result.response.userHandle) {
                     $("#userHandle").val(String.fromCharCode.apply("", new Uint8Array(result.response.userHandle)));
                 }
-                
+
                 $("#webauth").submit();
 
             })

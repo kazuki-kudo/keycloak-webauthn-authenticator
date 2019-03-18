@@ -70,6 +70,7 @@ public class RegisterAuthenticator implements Authenticator {
         String rpId = context.getUriInfo().getBaseUri().getHost();
         byte[] clientDataJSON = Base64.getUrlDecoder().decode(params.getFirst("clientDataJSON"));
         byte[] attestationObject = Base64.getUrlDecoder().decode(params.getFirst("attestationObject"));
+        String rawId = params.getFirst("rawId");
 
         Origin origin = new Origin(baseUrl);
         Challenge challenge = new DefaultChallenge(context.getAuthenticationSession().getAuthNote(AUTH_NOTE));
@@ -84,7 +85,7 @@ public class RegisterAuthenticator implements Authenticator {
             credential.setAttestedCredentialData(response.getAttestationObject().getAuthenticatorData().getAttestedCredentialData());
             credential.setAttestationStatement(response.getAttestationObject().getAttestationStatement());
             credential.setCount(response.getAttestationObject().getAuthenticatorData().getSignCount());
-
+            credential.setRawId(rawId);
             this.session.userCredentialManager().updateCredential(context.getRealm(), context.getUser(), credential);
             context.success();
         } catch (Exception me) {

@@ -15,11 +15,13 @@ import org.keycloak.forms.login.LoginFormsProvider;
 import org.keycloak.models.KeycloakSession;
 import org.keycloak.models.RealmModel;
 import org.keycloak.models.UserModel;
+import org.keycloak.models.jpa.JpaWebAuthnAuthenticatorStore;
 import org.keycloak.services.Urls;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.net.URI;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WebAuthn4jAuthenticator implements Authenticator {
@@ -43,8 +45,17 @@ public class WebAuthn4jAuthenticator implements Authenticator {
 
 
     public void authenticate(AuthenticationFlowContext context) {
+
         LoginFormsProvider form = context.form();
         Map<String, String> params = generateParameters(context.getRealm(), context.getUriInfo().getBaseUri());
+        UserModel user = context.getUser();
+
+        // DB検索クラスのインスタンス取得方法がわからないのでここで生成する。
+//        JpaWebAuthnAuthenticatorStore store = new JpaWebAuthnAuthenticatorStore(context.getSession());
+//        List<WebAuthnCredentialModel>  list = store.getAuthenticatorByUser(context.getRealm(), user);
+//        WebAuthnCredentialModel webAuthnmodel =  list.get(0);
+//        params.put("rawId", webAuthnmodel.getRawId());
+        params.put("rawId", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
         context.getAuthenticationSession().setAuthNote(AUTH_NOTE, params.get("challenge"));
         params.forEach(form::setAttribute);
         context.challenge(form.createForm("webauthn.ftl"));

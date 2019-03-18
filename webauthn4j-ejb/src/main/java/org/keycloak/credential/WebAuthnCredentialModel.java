@@ -13,8 +13,17 @@ public class WebAuthnCredentialModel implements CredentialInput {
     private WebAuthnAuthenticationContext authenticationContext;
     private long count;
     private String authenticatorId;
+    private String rawId;
 
-    @Override
+    public String getRawId() {
+		return rawId;
+	}
+
+	public void setRawId(String rawId) {
+		this.rawId = rawId;
+	}
+
+	@Override
     public String getType() {
         return WEBAUTHN_CREDENTIAL_TYPE;
     }

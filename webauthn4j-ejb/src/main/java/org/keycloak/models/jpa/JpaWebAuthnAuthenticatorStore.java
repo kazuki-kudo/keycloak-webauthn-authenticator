@@ -42,6 +42,7 @@ public class JpaWebAuthnAuthenticatorStore implements WebAuthnAuthenticatorStore
         entity.setAaguid(authenticator.getAttestedCredentialData().getAaguid());
         entity.setCredentialId(authenticator.getAttestedCredentialData().getCredentialId());
         entity.setCredentialPublicKey(authenticator.getAttestedCredentialData().getCredentialPublicKey());
+        entity.setRawId(authenticator.getRawId());
         UserEntity userRef = em.getReference(UserEntity.class, user.getId());
         entity.setUser(userRef);
         em.persist(entity);

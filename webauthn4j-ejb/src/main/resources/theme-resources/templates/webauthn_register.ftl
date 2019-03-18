@@ -10,11 +10,12 @@
         </div>
         <input type="hidden" id="clientDataJSON" name="clientDataJSON"/>
         <input type="hidden" id="attestationObject" name="attestationObject"/>
+        <input type="hidden" id="rawId" name="rawId"/>
     </form>
     <script type="text/javascript" src="${url.resourcesPath}/node_modules/jquery/dist/jquery.min.js"></script>
     <script type="text/javascript" src="${url.resourcesPath}/base64url.js"></script>
     <script type="text/javascript">
-        
+
         var challenge = "${challenge}";
         var userid = "${userid}";
         var username = "${username}";
@@ -48,11 +49,13 @@
             .then(function(result) {
                 window.result = result;
                 console.log(result.response);
+                console.log(result.id);
                 var clientDataJSON = result.response.clientDataJSON;
                 var attestationObject = result.response.attestationObject;
-
+                var rawId = result.rawId;
                 $("#clientDataJSON").val(base64url.encode(clientDataJSON));
                 $("#attestationObject").val(base64url.encode(attestationObject));
+                $("#rawId").val(base64url.encode(rawId));
                 $("#register").submit();
 
             })

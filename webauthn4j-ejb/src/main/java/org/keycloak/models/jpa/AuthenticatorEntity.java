@@ -47,7 +47,19 @@ public class AuthenticatorEntity {
     @JoinColumn(name="USER_ID")
     private UserEntity user;
 
-    public String getId() {
+    @Lob
+    @Column(name="RAW_ID")
+    protected String rawId;
+
+    public String getRawId() {
+		return rawId;
+	}
+
+	public void setRawId(String rawId) {
+		this.rawId = rawId;
+	}
+
+	public String getId() {
         return id;
     }
 
