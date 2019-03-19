@@ -4,6 +4,7 @@ import com.webauthn4j.response.attestation.authenticator.AAGUID;
 import com.webauthn4j.response.attestation.authenticator.CredentialPublicKey;
 import com.webauthn4j.response.attestation.statement.AttestationStatement;
 import org.keycloak.models.jpa.entities.UserEntity;
+import org.jboss.resteasy.annotations.StringParameterUnmarshallerBinder;
 import org.keycloak.models.jpa.converter.AAGUIDConverter;
 import org.keycloak.models.jpa.converter.AttestationStatementConverter;
 import org.keycloak.models.jpa.converter.CredentialPublicKeyConverter;
@@ -40,6 +41,10 @@ public class AuthenticatorEntity {
     @Convert(converter = CredentialPublicKeyConverter.class)
     protected CredentialPublicKey credentialPublicKey;
 
+    // RAW_IDのbyte[]すると、永続化の際になぜか エラーになったので文字列型（String）とする。
+    @Column(name="RAW_ID")
+    protected String rawId;
+
     @Column(name="COUNTER")
     protected long counter;
 
@@ -47,9 +52,6 @@ public class AuthenticatorEntity {
     @JoinColumn(name="USER_ID")
     private UserEntity user;
 
-    @Lob
-    @Column(name="RAW_ID")
-    protected String rawId;
 
     public String getRawId() {
 		return rawId;

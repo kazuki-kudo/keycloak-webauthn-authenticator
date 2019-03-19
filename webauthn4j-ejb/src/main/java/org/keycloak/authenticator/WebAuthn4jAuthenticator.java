@@ -48,14 +48,12 @@ public class WebAuthn4jAuthenticator implements Authenticator {
 
         LoginFormsProvider form = context.form();
         Map<String, String> params = generateParameters(context.getRealm(), context.getUriInfo().getBaseUri());
-        UserModel user = context.getUser();
 
-        // DB検索クラスのインスタンス取得方法がわからないのでここで生成する。
-//        JpaWebAuthnAuthenticatorStore store = new JpaWebAuthnAuthenticatorStore(context.getSession());
-//        List<WebAuthnCredentialModel>  list = store.getAuthenticatorByUser(context.getRealm(), user);
-//        WebAuthnCredentialModel webAuthnmodel =  list.get(0);
-//        params.put("rawId", webAuthnmodel.getRawId());
-        params.put("rawId", "XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX");
+        UserModel user = context.getUser();
+        JpaWebAuthnAuthenticatorStore store = new JpaWebAuthnAuthenticatorStore(session);
+        List<WebAuthnCredentialModel>  list = store.getAuthenticatorByUser(context.getRealm(), user);
+        WebAuthnCredentialModel webAuthnmodel =  list.get(0);
+        params.put("rawId", webAuthnmodel.getRawId());
         context.getAuthenticationSession().setAuthNote(AUTH_NOTE, params.get("challenge"));
         params.forEach(form::setAttribute);
         context.challenge(form.createForm("webauthn.ftl"));
@@ -77,21 +75,26 @@ public class WebAuthn4jAuthenticator implements Authenticator {
         byte[] authenticatorData = Base64Url.decode(params.getFirst("authenticatorData"));
         byte[] signature = Base64Url.decode(params.getFirst("signature"));
 
-        String userId = params.getFirst("userHandle");
+        //String userId = params.getFirst("userHandle");
+        // ユーザ情報は前段のUserFormで入力したユーザを引き継ぐ
+        String userId = context.getUser().getId();
         UserModel user = session.users().getUserById(userId, context.getRealm());
+        //userVerificationRequired は 無効にする。
         WebAuthnAuthenticationContext authenticationContext = new WebAuthnAuthenticationContext(
                 credentialId,
                 clientDataJSON,
                 authenticatorData,
                 signature,
                 server,
-                true
+                false
         );
 
         WebAuthnCredentialModel cred = new WebAuthnCredentialModel();
         cred.setAuthenticationContext(authenticationContext);
 
-        boolean result = session.userCredentialManager().isValid(context.getRealm(), user, cred);
+        boolean result = session.userCredentialManager
+        		
+        		().isValid(context.getRealm(), user, cred);
         if (result) {
             context.setUser(user);
             context.success();
@@ -101,7 +104,7 @@ public class WebAuthn4jAuthenticator implements Authenticator {
     }
 
     public boolean requiresUser() {
-        return false;
+        return true;
     }
 
     public boolean configuredFor(KeycloakSession session, RealmModel realm, UserModel user) {

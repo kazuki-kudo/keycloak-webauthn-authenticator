@@ -30,13 +30,14 @@
         var rpId = "${rpId}";
         var origin = "${origin}";
         var rawId = "${rawId}";
-// allowCredentials: [{ type: public-key, id: base64url.decode(rawId) }],
 
         var publicKey = {
             challenge: base64url.decode(challenge),
             rpId: rpId,
+            allowCredentials: [{ type: "public-key", id: base64url.decode(rawId) }],
             timeout : 60000,
         };
+        console.log(publicKey);
 
         navigator.credentials.get({publicKey})
             .then(function(result) {

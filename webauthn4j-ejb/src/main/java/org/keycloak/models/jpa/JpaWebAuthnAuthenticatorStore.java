@@ -66,6 +66,7 @@ public class JpaWebAuthnAuthenticatorStore implements WebAuthnAuthenticatorStore
         model.setAttestationStatement(entity.getAttestationStatement());
         model.setCount(entity.getCounter());
         model.setAuthenticatorId(entity.id);
+        model.setRawId(entity.getRawId());
         return model;
     }
 }
