@@ -70,7 +70,8 @@ public class RegisterAuthenticator implements Authenticator {
         String rpId = context.getUriInfo().getBaseUri().getHost();
         byte[] clientDataJSON = Base64.getUrlDecoder().decode(params.getFirst("clientDataJSON"));
         byte[] attestationObject = Base64.getUrlDecoder().decode(params.getFirst("attestationObject"));
-        String rawId = params.getFirst("rawId");
+        byte[] bRawId  = Base64.getUrlDecoder().decode(params.getFirst("rawId"));
+        String rawId = Base64.getEncoder().encodeToString(bRawId);
 
         Origin origin = new Origin(baseUrl);
         Challenge challenge = new DefaultChallenge(context.getAuthenticationSession().getAuthNote(AUTH_NOTE));
