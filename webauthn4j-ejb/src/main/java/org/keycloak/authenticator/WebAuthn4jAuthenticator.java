@@ -20,6 +20,7 @@ import org.keycloak.services.Urls;
 
 import javax.ws.rs.core.MultivaluedMap;
 import java.net.URI;
+import java.util.Base64;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -53,7 +54,7 @@ public class WebAuthn4jAuthenticator implements Authenticator {
         JpaWebAuthnAuthenticatorStore store = new JpaWebAuthnAuthenticatorStore(session);
         List<WebAuthnCredentialModel>  list = store.getAuthenticatorByUser(context.getRealm(), user);
         WebAuthnCredentialModel webAuthnmodel =  list.get(0);
-        params.put("rawId", webAuthnmodel.getRawId());
+        params.put("rawId", Base64.getEncoder().encodeToString(webAuthnmodel.getRawId()));
         context.getAuthenticationSession().setAuthNote(AUTH_NOTE, params.get("challenge"));
         params.forEach(form::setAttribute);
         context.challenge(form.createForm("webauthn.ftl"));
@@ -93,7 +94,7 @@ public class WebAuthn4jAuthenticator implements Authenticator {
         cred.setAuthenticationContext(authenticationContext);
 
         boolean result = session.userCredentialManager
-        		
+
         		().isValid(context.getRealm(), user, cred);
         if (result) {
             context.setUser(user);

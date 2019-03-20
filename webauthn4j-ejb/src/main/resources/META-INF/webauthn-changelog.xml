@@ -20,7 +20,7 @@
 
 <changeSet id="webauthn-1.0.1-snapshot" author="kazukikudo">
 	<addColumn tableName="WEBAUTHN_AUTHENTICATOR">
-		<column name="RAW_ID" type="VARCHAR(256)" />
+		<column name="RAW_ID" type="BLOB" />
 	</addColumn>
 </changeSet>
 

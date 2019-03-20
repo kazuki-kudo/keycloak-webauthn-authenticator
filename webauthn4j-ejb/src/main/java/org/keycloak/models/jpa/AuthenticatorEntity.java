@@ -41,9 +41,9 @@ public class AuthenticatorEntity {
     @Convert(converter = CredentialPublicKeyConverter.class)
     protected CredentialPublicKey credentialPublicKey;
 
-    // RAW_IDのbyte[]すると、永続化の際になぜか エラーになったので文字列型（String）とする。
+    @Lob
     @Column(name="RAW_ID")
-    protected String rawId;
+    protected byte[] rawId;
 
     @Column(name="COUNTER")
     protected long counter;
@@ -53,11 +53,11 @@ public class AuthenticatorEntity {
     private UserEntity user;
 
 
-    public String getRawId() {
+    public byte[] getRawId() {
 		return rawId;
 	}
 
-	public void setRawId(String rawId) {
+	public void setRawId(byte[] rawId) {
 		this.rawId = rawId;
 	}
 

@@ -13,13 +13,13 @@ public class WebAuthnCredentialModel implements CredentialInput {
     private WebAuthnAuthenticationContext authenticationContext;
     private long count;
     private String authenticatorId;
-    private String rawId;
+    private byte[] rawId;
 
-    public String getRawId() {
+    public byte[] getRawId() {
 		return rawId;
 	}
 
-	public void setRawId(String rawId) {
+	public void setRawId(byte[] rawId) {
 		this.rawId = rawId;
 	}
 
